@@ -1,0 +1,7 @@
+{
+    "vscode-edge-devtools.browserFlavor": "Default",
+    "vscode-edge-devtools.defaultEntrypoint": "2waymatch v5.html",
+    "vscode-edge-devtools.defaultUrl": "http://127.0.0.1:5000",
+    "vscode-edge-devtools.showWorkers": false,
+    "vscode-edge-devtools.useHttps": true
+}

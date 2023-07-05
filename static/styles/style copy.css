@@ -1,0 +1,194 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@100;300&display=swap');
+
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: IBM Plex Sans, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.7;
+} 
+
+#nav-main{
+  /* background-color: #161616 */
+  background-color: #012749;
+}
+
+#nav-span-heading{
+  padding-left: 330px; font-size: large
+}
+
+
+
+textarea, #way3_textArea,#nav-inDocChat,#chat-textarea-my, #docInsi_textArea_content, #docInsi_ResSumm_textArea,#dopDown-backColor,#chatbotMessageBody {
+  background-color: #F4F4F4; 
+  height: 170px
+}
+
+/* 3 Way Match */
+#table_3wayMathc_textArea, #Summary_3wayMathc_textArea, #cont_po_3way_textArea_table, #cont_po_3way_textArea_summary,#invCont_3way_textArea_table, #invCont_3way_textArea_summary{
+  background-color: #F4F4F4; 
+  height: 170px
+}
+
+#btn-previous-width,#btn-next-width {
+  width: 100px
+}
+
+nav-tabs {
+  border-bottom: 1px solid #000100;
+  
+}
+
+/* tab active color */
+.nav-tabs button.active {
+  color: white !important;
+  /* background-color: #92cbdf  !important;      */
+  background-color: #1E90FF  !important; 
+  
+}
+
+
+
+#nav-inDocChat,#nav-doc_insight-tab,#nav-resSummar-tab, #nav-struFormat-tab,#nav-3-WayMatch-tab, #nav-contract_po-tab,#nav-3-way-match-tab, #nav-inDocChat-tab,#nav-inv_cont-tab  {
+  border-top: 1px solid #000100;
+  border-left: 1px solid #000100;
+  border-right: 1px solid #000100;
+
+}
+
+
+
+.navbar-brand {
+  position: absolute;
+  padding-left: 30px;
+}
+
+
+.back_col_div {
+  background-color: #F4F4F4;
+
+  /* background-color: #a00909; */
+  /* background-color: #001d6c; */
+}
+
+.fix_button {
+  /* background: none repeat scroll 0 0 #FF0000; */
+  position:relative;
+  border: medium none;
+  /* color: #FFFFFF; */
+  height: 20px;
+  left: 93%;
+  position: fixed;
+  bottom: 20px;
+  width: 100px;
+  border-radius:  15px;
+}
+
+
+/* Chat box */
+
+
+Bot .box {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.box.arrow-left {
+  background-color: #b3b3b3;
+  text-align: left;
+}
+
+.chatBot .box.arrow-left {
+  background-color: #b3b3b3;
+}
+
+.box.arrow-right {
+  float: right;
+  text-align: right;
+}
+
+.box.arrow-right:after {
+  content: " ";
+  position: absolute;
+  right: -14px;
+  top: 5px;
+  border-top: 15px solid transparent;
+  border-right: none;
+  border-left: 15px solid #6c757d;
+  border-bottom: 15px solid transparent;
+}
+
+.chatBot .box.arrow-right:after {
+  border-left: 15px solid #6c757d;
+}
+
+.box.arrow-left:after {
+  content: " ";
+  position: absolute;
+  left: -14px;
+  top: 5px;
+  border-top: 15px solid transparent;
+  border-right: 15px solid #b3b3b3;
+  border-left: none;
+  border-bottom: 15px solid transparent;
+}
+
+.chatBot .box.arrow-left:after {
+  border-right: 15px solid #b3b3b3;
+}
+
+
+@media only screen and (min-width:240px) and (max-width: 768px) {
+  .box {
+      display: block;
+      float: none;
+      margin: 40px auto;
+  }
+}
+
+#messageBody {
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.chatBot {
+  margin-bottom: 5.5rem;
+  margin-left: 1.5rem;
+  height: 28rem;
+  width: 40rem;
+  z-index: 100;
+  display: none;
+  opacity: 0;
+}
+
+.chatBot.show {
+  display: block;
+  opacity: 1;
+}
+
+.chatbotMessageBlock {
+  bottom: 20px;
+}
+
+#chatbotMessageBody {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.btn-chat-bot, .btn-chat-bot:hover, .btn-chat-bot:active, .btn-chat-bot:focus {
+  height: 60px;
+  width: 60px;
+  /* background-color: #648339 !important; */
+}
+
+
+/* 3way card to show the excel content */
+
+#card_text_3way, #card_text_insight_dataStucture,#docInsi_ResSumm_textArea{
+  height: 170px;
+  background-color: #F4F4F4;
+}

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@100;300&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/script.js"></script>
+    <title>Document</title>
+</head>
+<body >
+    <nav class="navbar navbar-expand-lg" style="background-color: #161616;">
+
+            <a class="navbar-brand" href="#">
+                <img src="../img/ibm_logo_white_text.svg" alt="" width="40" height="34" class="d-inline-block align-text-top">
+                
+            </a>
+                
+
+            <div class="row justify-content-center" >
+                <span class="text-white text-center" style="padding-left: 330px; font-size: large;" >Contract Compliance and Purchase Price Variance powered by GEN AI</span>  
+            </div>
+        
+    </nav>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <div class="card border-info mt-3">
+                    <div class="card-body ">
+                        <div class="card-header">
+                            <nav class="">
+                                <div class="nav nav-tabs justify-content-center mb-2 " id="nav-tab" role="tablist">
+                                  <button class="nav-link border-info me-5 active" id="nav-doc-insight-tab" data-bs-toggle="tab" data-bs-target="#nav-doc-insight" type="button" role="tab" aria-controls="nav-doc-insight" aria-selected="true">Document Insight</button>
+                                  <button class="nav-link border-info ms-5" id="nav-3-way-match-tab" data-bs-toggle="tab" data-bs-target="#nav-3-way-match" type="button" role="tab" aria-controls="nav-3-way-match" aria-selected="false">3-Way-Match</button>
+                                </div>
+                            </nav>
+                        </div>
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="nav-doc-insight" role="tabpanel" aria-labelledby="nav-doc-insight-tab">
+                                <!-- document insight -->
+                                <div class="row justify-content-center">
+                                    <div class="col-6 mt-3">
+                                        <form action="">
+                                            <div class="input-group mb-3 ">                                                
+                                                <input type="file" id="doc_in_upload" style="color:transparent;" onchange="this.style.color = 'black'; " class="form-control" multiple>
+                                                <span class="input-group-text"> <button class="btn btn-sm input-group-btn form-control" type="submit" aria-expanded="false">Upload Document</button></span>
+                                            </div>
+                                        </form>
+                                        <div class="input-group mt-3 justify-content-center">
+                                            <span class="input-group-text">Number of Uploaded Document</span>
+                                            <input id="doc_in_count" type="text" class="ms-3" style="width:100px; text-align: center;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row bd-highlight justify-content-between">
+                                    <div class="p-2 bd-highlight"><button class="btn btn-primary">Previous</button></div>
+                                    <div class="p-2 bd-highlight"><span class="input-group-text">File Name:-</span></div>
+                                    <div class="p-2 bd-highlight"><button class="btn btn-primary">Next</button></div>
+                                </div>
+
+                                <div class="form-floating">
+                                    <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;" height: 100px;" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                    <label for="floatingTextarea">Uploaded document's text</label>
+                                </div>
+
+                                <div class="card border-info mt-3">
+                                    <div class="card-body mb-3 ">
+                                        <nav class="mt-3 ">
+                                            <div class="nav nav-tabs justify-content-between " id="nav-tab" role="tablist">
+                                              <button class="nav-link border-info active btn-secondary" id="nav-responseSummary-tab" data-bs-toggle="tab" data-bs-target="#nav-responseSummary" type="button" role="tab" aria-controls="nav-responseSummary" aria-selected="true">Response: Summary</button>
+                                              <button class="nav-link border-info" id="nav-StructuredFormat-tab" data-bs-toggle="tab" data-bs-target="#nav-StructuredFormat" type="button" role="tab" aria-controls="nav-StructuredFormat" aria-selected="false">Structured Format</button>
+                                              <button class="nav-link border-info" id="nav-InDocumentChat-tab" data-bs-toggle="tab" data-bs-target="#nav-InDocumentChat" type="button" role="tab" aria-controls="nav-InDocumentChat" aria-selected="false">In Document Chat</button>
+                                            </div>
+                                        </nav>
+                                        <div class="tab-content" id="nav-tabContent">
+                                        <!-- response start summary -->
+                                            <div class="tab-pane fade show active" id="nav-responseSummary" role="tabpanel" aria-labelledby="nav-responseSummary-tab">
+                                              
+                                                <div class="row g-2">
+
+                                                    <div class="col-2">
+                                                        <div class="form-floating mt-3 ">
+                                                              <select class="form-select border-info" style="background-color: #D9FBFB; height: 100px;" height: 100px;" id="floatingSelectGrid" aria-label="Floating label select example">
+                                                              <option selected>Select Prompt</option>
+                                                              <option value="Agreement Name">Agreement Name</option>
+                                                              <option value="Supplier name">Supplier name</option>
+                                                              <option value="End date of the agreement">Start date of the Agreement </option>
+                                                              <option value="Contract id">Start date of the Agreement </option>
+                                                              <option value="Payment Terms">Start date of the Agreement </option>
+                                                              <option value="Price per unit">Start date of the Agreement </option>
+                                                              <option value="unit of measure">Start date of the Agreement </option>
+                                                            
+                                                              </select>
+                                                              <label for="floatingSelectGrid">Works with selects</label>
+                                                        </div>
+                                                      </div>
+
+                                                    <div class="col-10">
+                                                        <div class="form-floating mt-3">
+                                                            <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;" height: 100px;" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                            <label for="floatingTextarea">Document insight according select prompt</label>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                </div>
+                                        
+                                            </div>
+                                        <!-- response end summary -->
+                                            <div class="tab-pane fade" id="nav-StructuredFormat" role="tabpanel" aria-labelledby="nav-StructuredFormat-tab">
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-3">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Comments</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="nav-InDocumentChat" role="tabpanel" aria-labelledby="nav-InDocumentChat-tab">
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-3">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Comments</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 3 Way Match -->
+                            <div class="tab-pane fade" id="nav-3-way-match" role="tabpanel" aria-labelledby="nav-3-way-match-tab">
+                                <div class="row justify-content-center">
+                                    <div class="col-6 mt-3">
+                                        <form action="">
+                                            <div class="input-group mb-3 ">
+                                                <span class="input-group-text" id="basic-addon1">Upload Document</span>
+                                                <input type="file" style="color:transparent;" onchange="this.style.color = 'black';" class="form-control" multiple>
+                                                <span class="input-group-text"> <button class="btn btn-sm input-group-btn form-control" type="submit" aria-expanded="false">Submit</button></span>
+                                            </div>
+                                        </form>
+                                        <div class="input-group mt-3 justify-content-center">
+                                            <span class="input-group-text">Number of Uploaded Document</span>
+                                            <span class="input-group-text">33</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex flex-row bd-highlight justify-content-between">
+                                    <div class="p-2 bd-highlight"><button class="btn btn-primary">Previous</button></div>
+                                    <div class="p-2 bd-highlight"><button class="btn btn-primary">Next</button></div>
+                                </div>
+
+                                <div class="form-floating">
+                                    <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                    <label for="floatingTextarea">Comments</label>
+                                </div>
+
+                                <div class="card border-info mt-3">
+                                    <div class="card-body mb-3 ">
+                                        <nav class="mt-3 ">
+                                            <div class="nav nav-tabs justify-content-between " id="nav-tab" role="tablist">
+                                              <button class="nav-link border-info active btn-secondary" id="nav-contractAndPo-tab" data-bs-toggle="tab" data-bs-target="#nav-contractAndPo" type="button" role="tab" aria-controls="nav-contractAndPo" aria-selected="true">Contract And PO</button>
+                                              <button class="nav-link border-info" id="nav-invoiceContract-tab" data-bs-toggle="tab" data-bs-target="#nav-invoiceContract" type="button" role="tab" aria-controls="nav-invoiceContract" aria-selected="false">Invoice And Contract</button>
+                                              <button class="nav-link border-info" id="nav-inDocChat-tab" data-bs-toggle="tab" data-bs-target="#nav-inDocChat" type="button" role="tab" aria-controls="nav-inDocChat" aria-selected="false">In Document Chat</button>
+                                            </div>
+                                        </nav>
+                                        <div class="tab-content" id="nav-tabContent">
+                                     
+                                            <div class="tab-pane fade show active" id="nav-contractAndPo" role="tabpanel" aria-labelledby="nav-contractAndPo-tab">
+                                              
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-3">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Contract and PO 1 </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-2">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Contract and PO 2</label>
+                                                    </div>
+                                                </div>
+                                        
+                                            </div>
+                                
+                                            <div class="tab-pane fade" id="nav-invoiceContract" role="tabpanel" aria-labelledby="nav-invoiceContract-tab">
+                                               
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-3">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Invoice and Contract 1 </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-2">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">Invoice and Contract 2</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="nav-inDocChat" role="tabpanel" aria-labelledby="nav-inDocChat-tab">
+                                                
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-3">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">In document chat 1 </label>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-floating mt-2">
+                                                        <textarea class="form-control border-info" style="background-color: #D9FBFB; height: 100px;"" placeholder="Leave a comment here" id="docInsi_textArea"></textarea>
+                                                        <label for="floatingTextarea">In document chat 2</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>                  
+                
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>
