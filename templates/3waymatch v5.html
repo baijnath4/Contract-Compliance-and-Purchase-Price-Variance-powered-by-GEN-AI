@@ -37,7 +37,7 @@
             <nav class="mt-3">
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <button class="nav-link active " id="nav-doc_insight-tab" data-bs-toggle="tab" data-bs-target="#nav-doc_insight"
-                  type="button" role="tab" aria-controls="nav-doc_insight" aria-selected="true"> Document Insight
+                  type="button" role="tab" aria-controls="nav-doc_insight" aria-selected="true"> Contract Insights
                 </button>
                 <button class="nav-link " id="nav-3-WayMatch-tab" data-bs-toggle="tab" data-bs-target="#nav-3-WayMatch"
                   type="button" role="tab" aria-controls="nav-3-WayMatch" aria-selected="false"> 3-Way-Match
@@ -294,7 +294,9 @@
                           <table class="table table-bordered" width="800">
                             <thead class="bg-dark text-light">
                                 <tr>
+                                
                                     {% for col in fileContent1_3way.columns %}
+                                    
                                     <th >{{ col }}</th>
                                     {% endfor %}
                                 </tr>
@@ -304,7 +306,7 @@
                               <tr>
                                 {% for colname in fileContent1_3way.columns %}
 
-                                  {% if colname in ['Unit_Price_In_Orig_Curr','PO_Spend','Inv_Gross_Value','Inv_Unit_Price']%}
+                                  {% if colname in ['Unit_Price_In_Orig_Curr','PO_Commit','Inv_Gross_Value','Inv_Unit_Price']%}
                                       <td>${{row[colname] | round(2) }}</td>
                                   {% else %}
                                     <td>{{ row[colname] }}</td>
@@ -331,16 +333,16 @@
                         <div class="nav nav-tabs" id="nav-tab" role="tablist" >
                             <button class="nav-link active text-dark" id="nav-contract_po-tab" data-bs-toggle="tab"
                               data-bs-target="#nav-contract_po" type="button" role="tab" aria-controls="nav-resSummar"
-                              aria-selected="true" > Contract And PO 
+                              aria-selected="true" > Contract To PO Compliance 
                             </button>
                             <button class="nav-link text-dark" id="nav-inv_cont-tab" data-bs-toggle="tab"
                               data-bs-target="#nav-inv_cont" type="button" role="tab" aria-controls="nav-struFormat" aria-selected="false">
-                              Invoice And Contract 
+                              Contract To Invoice Compliance
                             </button>
                             <button
                               class="nav-link text-dark" id="nav-3-way-match-tab" data-bs-toggle="tab" data-bs-target="#nav-3-way-match"
                               type="button" role="tab" aria-controls="nav-inDocChat" aria-selected="false" > 
-                              3-Way-Match 
+                              Spend/Cash Leakage Analysis
                             </button>
                         </div>
                       </nav>
@@ -366,15 +368,29 @@
                                   {% for idx, row in resContPO.iterrows() %}
                                   <tr>
                                       {% for colname in resContPO.columns %}
-                                        {% if colname in ['PO_Spend','Unit_Price_In_Orig_Curr','Contracted_Unit_Price','PPV_PO_Contract','Payter_Diff_PO_Contract'] %}
+                                        {% if colname in ['PO_Commit','Unit_Price_In_Orig_Curr','Contracted_Unit_Price','PPV_PO_Contract','Payter_Diff_PO_Contract'] %}
 
                                           <!-- color coding -->
                                             {% if colname in ['PPV_PO_Contract','Payter_Diff_PO_Contract'] and row[colname] <= 0 %}
-                                                <td class="table-success">${{ row[colname] | round(2) }}</td>
+                                                {% if colname == 'Payter_Diff_PO_Contract'%}
+                                                  <td class="table-success">{{ row[colname] | round(2) }}</td> 
+                                                {%else%}
+                                                  <td class="table-success">${{ row[colname] | round(2) }}</td>
+                                                {% endif %}
                                               {% elif colname in ['PPV_PO_Contract','Payter_Diff_PO_Contract'] and row[colname] > 0 %}
-                                                <td class="table-danger">${{ row[colname] | round(2) }}</td>
+                                                {% if colname == 'Payter_Diff_PO_Contract'%}
+                                                  <td class="table-danger">{{ row[colname] | round(2) }}</td> 
+                                                {%else%}
+                                                  <td class="table-danger">${{ row[colname] | round(2) }}</td>
+                                                {% endif %}
+                                                
                                               {% elif colname in ['PPV_PO_Contract','Payter_Diff_PO_Contract'] %}
-                                                <td class="table-warning">${{ row[colname] | round(2) }}</td>
+                                                {% if colname == 'Payter_Diff_PO_Contract'%}
+                                                  <td class="table-warning">{{ row[colname] | round(2) }}</td> 
+                                                {%else%}
+                                                  <td class="table-warning">${{ row[colname] | round(2) }}</td>
+                                                {% endif %}
+                                              
                                               {% else %}
                                               <td >${{ row[colname] | round(2) }}</td>
                                             {% endif %}

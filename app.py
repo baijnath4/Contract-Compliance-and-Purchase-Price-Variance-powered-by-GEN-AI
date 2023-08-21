@@ -5,24 +5,22 @@ import openai
 import pandas as pd
 import sys
 
-# from transformers import AutoModelForCausalLM, AutoTokenizer
-# import torch
-# tokenizer = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
-# model = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+
 
 from utils.api_utils import documentChatBot, genericChatbot
 from chatGPTModel.gPTModel import contractandinvoice, contractandpo,threewaymatch,questions
 
-sys.path.insert(0, 'C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/chatGPTModel')
+# sys.path.insert(0, 'C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/chatGPTModel')
 
 po_data = pd.DataFrame()
 app = Flask(__name__)
 app.secret_key = 'hello'
 
-UPLOAD_FOLDER_pdf = "C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload/"
+UPLOAD_FOLDER_pdf = "upload/"
 
-UPLOAD_FOLDER_3way = "C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/"
-DUMMY = "C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/dummy/"
+UPLOAD_FOLDER_3way = "upload_3way/"
+DUMMY = "dummy/"
+
 
 def dataFromPayload(request):
     payload = request.get_json()
@@ -142,16 +140,7 @@ def get_result_docInsight():
     print("promptDropDown:---",promptDropDown)
     return  promptDropDown
 
-# @app.route('/get_result_docInsight', methods=['POST'])    # drop down 
-# def get_result_docInsight():
-#     selected_option = request.form['selected_option']
-#     fileContDict,fileUplCount= fun_file()
-#     fileContent1 = fileContDict[current_file_index][1]
-#     questionResult = questions(fileContent1,selected_option)
-#     # Perform any necessary processing with the selected option
-#     result = f"{questionResult}"
-#     jeson_result = jsonify(result=result)
-#     return  jeson_result
+
 
 #  chat boat ....................................................................
 
@@ -176,7 +165,7 @@ def fun_file_3way():
     for file in os.listdir('upload_3way/'):
      
         path = os.path.join(UPLOAD_FOLDER_3way,file)
-        doc_text_ppv = pd.read_excel(path,index_col=0)
+        doc_text_ppv = pd.read_excel(path)
         dictfile[fCount] = [file,doc_text_ppv]
         fCount=fCount+1
 
@@ -190,8 +179,11 @@ def analysisResult():
     dummFileName = current_file.split('.')[0]+'.xlsx'
     dummy_data = dumm_dic[dummFileName]
     # contractDummy = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/dummy/C0_1L976.xlsx")
-    po = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/PO.xlsx")
-    invoice = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/Invoice data.xlsx")
+    po = pd.read_excel("upload_3way/PO.xlsx")
+    invoice = pd.read_excel("upload_3way/Invoice data.xlsx")
+
+    # po = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/PO.xlsx")
+    # invoice = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/Invoice data.xlsx")
     resContPO, sumContPo = contractandpo(contract=dummy_data,po=po)
     resContInvoice, sumContInvoice = contractandinvoice(contract=dummy_data, invoice=invoice)
     res3WayMatch, sum3WayMatch = threewaymatch(contract=dummy_data, po=po,invoice=invoice)  
@@ -213,16 +205,21 @@ def uploadfile_3way():                     #  Comparative analysis  - file uploa
         return render_template('./3waymatch v5.html', resContPO=resContPO,sumContPo=sumContPo,resContInvoice=resContInvoice,sumContInvoice=sumContInvoice,res3WayMatch=res3WayMatch ,sum3WayMatch=sum3WayMatch, current_file_3way = current_file_3way, fileContent1_3way = fileContDict_3way[current_file_index][1] ,fileUplCount_3way = fileUplCount_3way, dummy_data=dummy_data)        
     return render_template('./3waymatch v5.html')
 
+current_file_index_3way_upload = 0
 @app.route('/next_3way')
 def next_3way():
-    global current_file_index
-    current_file_index = current_file_index + 1
+    global current_file_index_3way_upload
+    # current_file_index_3way_upload = current_file_index_3way_upload + 1
+
     dummy_data = pd.DataFrame()
     fileContDictnext_3way,fileUplCount= fun_file_3way()
-    if current_file_index >= len(fileContDictnext_3way):
-        current_file_index = 0
-    fileContent1_3way = fileContDictnext_3way[current_file_index][1]
-    current_file_3way = fileContDictnext_3way[current_file_index][0]
+    if current_file_index_3way_upload >= len(fileContDictnext_3way):
+        # current_file_index_3way_upload = 0
+        current_file_index_3way_upload = current_file_index_3way_upload + 1
+    fileContent1_3way = fileContDictnext_3way[current_file_index_3way_upload][1]
+    print("3Way fileContent1_3way",fileContent1_3way)
+    
+    current_file_3way = fileContDictnext_3way[current_file_index_3way_upload][0]
     resContPO,sumContPo,resContInvoice,sumContInvoice,res3WayMatch,sum3WayMatch=analysisResult()
     return render_template('./3waymatch v5.html',resContPO=resContPO,sumContPo=sumContPo,resContInvoice=resContInvoice,sumContInvoice=sumContInvoice,res3WayMatch=res3WayMatch ,sum3WayMatch=sum3WayMatch,dummy_data=dummy_data,current_file_3way= current_file_3way, fileContent1_3way = fileContent1_3way ,fileCount=fileUplCount)
 

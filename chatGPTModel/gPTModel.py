@@ -35,16 +35,20 @@ def questions(pdf1,i):
 
 def contractandpo(contract,po):
     final_po = pd.merge(contract,po,how='inner',on=['Contract_ID','Line_Item_Desc'])
-    final_po = final_po[['PO_ID','Line_Item_Desc','Supplier_x','Payment_Terms_PO','Unit_Price_In_Orig_Curr','PO_Spend','Contract_ID','Contract_Payterms','Contracted_Unit_Price']]
-    final_po['Contract_Payterms'] = final_po['Contract_Payterms'].astype(int)
+    final_po = final_po[['PO_ID','Line_Item_Desc','Supplier_x','Payment_Terms_PO','Unit_Price_In_Orig_Curr','PO_Commit','Contract_ID','Payment_Terms_Contract','Contracted_Unit_Price']]
+    final_po['Payment_Terms_Contract'] = final_po['Payment_Terms_Contract'].astype(int)
     final_po['Contracted_Unit_Price'] = final_po['Contracted_Unit_Price'].astype(int)
     final_po['Payment_Terms_PO'] = final_po['Payment_Terms_PO'].astype(int)
     final_po['Unit_Price_In_Orig_Curr'] = final_po['Unit_Price_In_Orig_Curr'].astype(int)
-    final_po['PPV_PO_Contract'] = ((final_po['Unit_Price_In_Orig_Curr'] - final_po['Contracted_Unit_Price'])/final_po['Contracted_Unit_Price'])*100
-    final_po['PPV_PO_Contract'] = final_po['PPV_PO_Contract'].astype(int)
-    final_po['Payter_Diff_PO_Contract'] = (final_po['Contract_Payterms'] - final_po['Payment_Terms_PO'])
+    final_po['Spend Leakage'] = ((final_po['Unit_Price_In_Orig_Curr'] - final_po['Contracted_Unit_Price'])/final_po['Contracted_Unit_Price'])*100
+    final_po['Spend Leakage'] = final_po['Spend Leakage'].astype(int)
+    final_po['Payter_Diff_PO_Contract'] = (final_po['Payment_Terms_Contract'] - final_po['Payment_Terms_PO'])
     openai.api_key = "3a87ebf808cf4876b336ddbef5dd2528"
-    prompt_s = ['provide the key differences in price and payterms from the contract and PO']
+    # prompt_s = ['provide the key differences in price and payterms from the contract and PO']
+    # prompt_s = ['provide the difference of price and payterms in the table:-sum df :-- The difference of price and payterms in the table is 20.']
+    # prompt_s = ['provide the difference of unit price and payterm from the data and also provide key points from the data']
+    prompt_s =['provide me the total spend leakage and the average differences between the po and contract payterm']
+   
     summary = ''
     summary+= (questions(final_po,prompt_s))
     return final_po,summary
@@ -52,53 +56,53 @@ def contractandpo(contract,po):
 def contractandinvoice(contract,invoice):
     final_df = pd.merge(contract,invoice,how='inner',on=['Contract_ID','Line_Item_Desc'])
     final_df = final_df[['Doc_Num','Line_Item_Desc','Inv_Gross_Value','Inv_Payterms','Inv_Unit_Price',
-                         'Contract_Payterms','Contracted_Unit_Price','Unit_Price_In_Orig_Curr','Contract_ID']]
-    final_df['Contract_Payterms'] = final_df['Contract_Payterms'].astype(int)
+                         'Payment_Terms_Contract','Contracted_Unit_Price','Unit_Price_In_Orig_Curr','Contract_ID']]
+    final_df['Payment_Terms_Contract'] = final_df['Payment_Terms_Contract'].astype(int)
     # final_df['Payment_Terms_PO'] = final_df['Payment_Terms_PO'].astype(int)
     final_df['Inv_Payterms'] = final_df['Inv_Payterms'].astype(int)
     final_df['Inv_Gross_Value'] = final_df['Inv_Gross_Value'].astype(int)
     final_df['Inv_Unit_Price'] = final_df['Inv_Unit_Price'].astype(int)
     final_df['Contracted_Unit_Price'] = final_df['Contracted_Unit_Price'].astype(int)
     final_df['Unit_Price_In_Orig_Curr'] = final_df['Unit_Price_In_Orig_Curr'].astype(int)
-    final_df['PPV_Inv_Contract'] = ((final_df['Inv_Unit_Price'] - final_df['Contracted_Unit_Price'])/final_df['Contracted_Unit_Price'])*100
-    final_df['PPV_Inv_Contract'] = final_df['PPV_Inv_Contract'].astype(int)
-    final_df['Working_Capital_Inv_Contract'] = ((final_df['Contract_Payterms'] - final_df['Inv_Payterms'])*final_df['Inv_Gross_Value'])/365
+    final_df['Spend Leakage'] = ((final_df['Inv_Unit_Price'] - final_df['Contracted_Unit_Price'])/final_df['Contracted_Unit_Price'])*100
+    final_df['Spend Leakage'] = final_df['Spend Leakage'].astype(int)
+    final_df['Working_Capital_Inv_Contract'] = ((final_df['Payment_Terms_Contract'] - final_df['Inv_Payterms'])*final_df['Inv_Gross_Value'])/365
     final_df = final_df.rename(columns={'INVOICE': 'Doc_Numb', 'PO': 'PO_ID','Unit_Price_In_Orig_Curr':'PO_Unit_Price',
                                         'Product Description':'Line_Item_Desc'})
     final_df = final_df[['Doc_Num','Inv_Payterms','Inv_Unit_Price',
-                         'PO_Unit_Price','Contract_ID','Contract_Payterms',
-                         'Contracted_Unit_Price','PPV_Inv_Contract','Working_Capital_Inv_Contract']]        
+                         'PO_Unit_Price','Contract_ID','Payment_Terms_Contract',
+                         'Contracted_Unit_Price','Spend Leakage','Working_Capital_Inv_Contract']]        
     openai.api_key = "3a87ebf808cf4876b336ddbef5dd2528"
-    prompt_s = ['provide the key differences in price and payterms from the contract and invoice']
+    prompt_s = ['provide me the total spend leakage and the total cash flow ooportunity contract and invoice']
     summary = ''
     summary+= (questions(final_df,prompt_s))
     return final_df,summary
 
 def threewaymatch(contract,po,invoice):
-    final_df = pd.merge(contract,invoice,how='inner',on=['Contract_ID','Line_Item_Desc'])
-    final_df = final_df[['Doc_Num','Contract_ID','Line_Item_Desc','Inv_Payterms','Inv_Unit_Price','Contract_Payterms','Contracted_Unit_Price','Inv_Gross_Value','Unit_Price_In_Orig_Curr']]
-    final_df['Contract_Payterms'] = final_df['Contract_Payterms'].astype(int)
+    final_df = pd.merge(pd.merge(contract,invoice,how='inner',on=['Contract_ID','Line_Item_Desc']),po,on=['Contract_ID','Line_Item_Desc'])
+    final_df = final_df[['Doc_Num','Supplier_x','Contract_ID','Line_Item_Desc','Inv_Payterms','Inv_Unit_Price','Payment_Terms_Contract','Payment_Terms_PO','Contracted_Unit_Price','Inv_Gross_Value','Unit_Price_In_Orig_Curr_x']]
+    final_df['Payment_Terms_Contract'] = final_df['Payment_Terms_Contract'].astype(int)
     # final_df['Payment_Terms_PO'] = final_df['Payment_Terms_PO'].astype(int)
     final_df['Inv_Payterms'] = final_df['Inv_Payterms'].astype(int)
     final_df['Inv_Gross_Value'] = final_df['Inv_Gross_Value'].astype(int)
     final_df['Inv_Unit_Price'] = final_df['Inv_Unit_Price'].astype(int)
     final_df['Contracted_Unit_Price'] = final_df['Contracted_Unit_Price'].astype(int)
-    final_df['Unit_Price_In_Orig_Curr'] = final_df['Unit_Price_In_Orig_Curr'].astype(int)
-    final_df['PPV_Inv_Contract'] = ((final_df['Inv_Unit_Price'] - final_df['Contracted_Unit_Price'])/final_df['Contracted_Unit_Price'])*100
-    final_df['PPV_Inv_Contract'] = final_df['PPV_Inv_Contract'].astype(int)
-    final_df['Working_Capital_Inv_Contract'] = ((final_df['Contract_Payterms'] - final_df['Inv_Payterms'])*final_df['Inv_Gross_Value'])/365
+    final_df['Unit_Price_In_Orig_Curr'] = final_df['Unit_Price_In_Orig_Curr_x'].astype(int)
+    final_df['Spend Leakage'] = ((final_df['Inv_Unit_Price'] - final_df['Contracted_Unit_Price'])/final_df['Contracted_Unit_Price'])*100
+    final_df['Spend Leakage'] = final_df['Spend Leakage'].astype(int)
+    final_df['Working_Capital_Inv_Contract'] = ((final_df['Payment_Terms_Contract'] - final_df['Inv_Payterms'])*final_df['Inv_Gross_Value'])/365
     final_df = final_df.rename(columns={'INVOICE': 'Doc_Num','Unit_Price_In_Orig_Curr':'PO_Unit_Price','Product Description':'Line_Item_Desc'})
-    final_df = final_df[['Doc_Num','Line_Item_Desc','Inv_Payterms','Inv_Unit_Price','PO_Unit_Price','Contract_ID','Contract_Payterms','Contracted_Unit_Price','Inv_Gross_Value','PPV_Inv_Contract','Working_Capital_Inv_Contract']]        
-    final_df = final_df.rename(columns={ 'Unit_Price_In_Orig_Curr':'PO_Unit_Price','Product Description':'Line_Item_Desc','Payment_Terms_PO':'PO_Payterms'})
-    final_s = final_df[['Line_Item_Desc','Contracted_Unit_Price','PO_Unit_Price','Inv_Unit_Price','Contract_Payterms','Inv_Payterms']]
+    final_df = final_df[['Doc_Num','Supplier_x','Line_Item_Desc','Inv_Payterms','Inv_Unit_Price','PO_Unit_Price','Contract_ID','Payment_Terms_Contract','Payment_Terms_PO','Contracted_Unit_Price','Inv_Gross_Value','Spend Leakage','Working_Capital_Inv_Contract']]        
+    final_df = final_df.rename(columns={ 'Payment_Terms_Contract':'Contract_Payterms','Supplier_x':'Supplier','Unit_Price_In_Orig_Curr':'PO_Unit_Price','Product Description':'Line_Item_Desc','Payment_Terms_PO':'PO_Payterms'})
+    final_s = final_df[['Line_Item_Desc','Supplier','Contracted_Unit_Price','PO_Unit_Price','Inv_Unit_Price','Contract_Payterms','Inv_Payterms','PO_Payterms']]
     openai.api_key = "3a87ebf808cf4876b336ddbef5dd2528"
     prompt_s = ['provide the differences in unit price across contract, PO and Invoice from the table in words and also provide summary of contract,po and Inv_Payterms']
     summary = ''
     summary+= (questions(final_s,prompt_s))
     return final_s,summary
 
-# contractDummy =pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/dummy/C0_1L976.xlsx")
-# po = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/PO_updated.xlsx")
+# contractDummy =pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/dummy/CO_12L23.xlsx")
+# po = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/PO.xlsx")
 # resultDF, reslutSumm=contractandpo(contract=contractDummy,po=po)
 # print("result df :--", resultDF)
 # print("sum df :--", reslutSumm)
@@ -111,7 +115,7 @@ def threewaymatch(contract,po,invoice):
 # print("result df :--", reslutSumm)
 
 # contractDummy =pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/dummy/C0_1L976.xlsx")
-# invoice = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/Invoice data_Updated.xlsx")
+# invoice = pd.read_excel("C:/Users/01934L744/Box/Baijnath Data/Project 2023/Nidhi/contract - v4.1/upload_3way/Invoice data.xlsx")
 # resultDF, reslutSumm=threewaymatch(contract=contractDummy,po=po,invoice=invoice)
 # print("result df :--", resultDF)
 # print("result df :--", reslutSumm)

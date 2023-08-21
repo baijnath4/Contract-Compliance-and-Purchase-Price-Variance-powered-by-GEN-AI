@@ -4,10 +4,12 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import copy
 import re
+
 import pandas as pd
 import csv
 
 deployment_name = "contract_search"
+deployment_name1 = "gpt-3.5-turbo"
 openai.api_type = "azure"
 openai.api_key = "3a87ebf808cf4876b336ddbef5dd2528"
 openai.api_base = "https://bpogenaiopenai.openai.azure.com/"
@@ -40,9 +42,17 @@ def genericChatbot(question):
     messages=[{"role": "system", "content": question}]
 
     response = openai.ChatCompletion.create(
-        model = "gpt-3.5-turbo",
-        messages = messages
-    )
+        engine="global_chatbot",
+        messages = messages,
+        temperature=0.7,
+        max_tokens=800,
+        top_p=0.95,
+        frequency_penalty=0,
+        presence_penalty=0,
+        stop=None)    
     global_chatbot = response["choices"][0]["message"]["content"]
 
     return {'global_chatbot': global_chatbot}
+
+# data = genericChatbot("what is machine learning")
+# print(data)
